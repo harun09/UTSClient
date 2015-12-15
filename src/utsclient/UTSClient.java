@@ -22,36 +22,38 @@ public class UTSClient {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        Socket socket;
-        PrintWriter out;
-        BufferedReader in;
-        BufferedReader userin;
+    public static void main(String[] args) throws IOException {
+        String host = "10.151.43.147";
+        
+        Socket socket = null;
+        PrintWriter out = null;
+        BufferedReader in = null;
         
         try {
-            socket = new Socket("10.151.34.155", 6666);
+            socket = new Socket(host, 6666);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            
-            userin = new BufferedReader(new InputStreamReader(System.in));
-            String usrinp=userin.readLine();
-            
-            while (!usrinp.equals("exit")) {
-                
-                System.out.println(in.readLine());
-                for(int i=1;in.ready();i++)
-                {
-                    out.println(usrinp);
-                    out.flush();
-                    System.out.println(in.readLine());
-                }
-                
-            }
-           out.close(); 
         } catch (IOException ex) {
             Logger.getLogger(UTSClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        BufferedReader userIn;
+        userIn = new BufferedReader(new InputStreamReader(System.in));
+        String userInput;
+        
+        while(!(userInput = userIn.readLine()).equals("exit")){
+            out.println(userInput);
+            out.flush();
+            System.out.println(in.readLine());
+            for(int i = 0; in.ready(); i++) {
+                System.out.println(in.readLine());
+            }
+        }
+        
+        in.close();
+        out.close();
+        userIn.close();
+        socket.close();
     }
     
 }
